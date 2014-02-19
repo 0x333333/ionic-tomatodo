@@ -15,6 +15,7 @@ angular.module('todo', ['ionic'])
       return [];
     },
     save: function(projects) {
+      console.log("Save!");
       window.localStorage['projects'] = angular.toJson(projects);
     },
     newProject: function(projectTitle) {
@@ -47,6 +48,11 @@ angular.module('todo', ['ionic'])
 
   // Load or initialize projects
   $scope.projects = Projects.all();
+  $scope.showDeleteBtn = false;
+
+  $scope.changeBtnStatus = function() {
+    $scope.showDeleteBtn = !$scope.showDeleteBtn;
+  }
 
   // Grab the last active, or the first project
   $scope.activeProject = $scope.projects[Projects.getLastActiveIndex()];
@@ -61,14 +67,37 @@ angular.module('todo', ['ionic'])
 
   // Called to select the given project
   $scope.selectProject = function(project, index) {
-    $scope.activeProject = project;
-    Projects.setLastActiveIndex(index);
-    $scope.sideMenuController.close();
+    console.log('showDeleteBtn:' + $scope.showDeleteBtn);
+    if (!$scope.showDeleteBtn) {
+      $scope.activeProject = project;
+      Projects.setLastActiveIndex(index);
+      $scope.sideMenuController.close();
+    };
   };
 
   $scope.completionChanged = function() {
     Projects.save($scope.projects);
   };
+
+  // Called to deleted selected project
+  $scope.onItemDelete = function(project) {
+    console.log('project:' + project);
+    var indexOfProject = $scope.projects.indexOf(project);
+    console.log('index of project:' + indexOfProject);
+    // Set the first project as active project
+    $scope.activeProject = $scope.projects[-1];
+    Projects.setLastActiveIndex(-1);
+    // Delete selected project
+    $scope.projects.splice($scope.projects.indexOf(project), 1);
+    // Save to local storage
+    Projects.save($scope.projects);
+    if ($scope.projects.length == 0) {
+      $scope.showDeleteBtn = false;
+    };
+  };
+
+
+
 
   // Create our modal
   $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
@@ -77,6 +106,26 @@ angular.module('todo', ['ionic'])
     focusFirstInput: false,
     scope: $scope
   });
+
+
+
+  // Initialize option button
+  $scope.itemButtons = [
+    {
+      text: 'Edit',
+      type: 'button-assertive',
+      onTap: function(item) {
+        alert('Edit Item: ' + item.id);
+      }
+    },
+    {
+      text: 'Share',
+      type: 'button-calm',
+      onTap: function(item) {
+        alert('Share Item: ' + item.id);
+      }
+    }
+  ];
 
   $scope.createTask = function(task) {
     if(!$scope.activeProject) {
@@ -98,11 +147,12 @@ angular.module('todo', ['ionic'])
   };
 
   $scope.closeNewTask = function() {
-    $scope.taskModal.hide();
+    $scope.taskModal.hide();  
   }
 
   $scope.toggleProjects = function() {
     $scope.sideMenuController.toggleLeft();
+    $scope.showDeleteBtn = false;
   };
 
 
@@ -122,5 +172,4 @@ angular.module('todo', ['ionic'])
   });
 
 });
-
 

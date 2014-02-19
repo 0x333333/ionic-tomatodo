@@ -23,19 +23,25 @@
     <side-menus>
       <!-- Center content -->
       <pane side-menu-content>
+        
         <header class="bar bar-header bar-positive">
           <button class="button button-icon" ng-click="toggleProjects()">
             <i class="icon ion-navicon"></i>
           </button>
           <h1 class="title">{{activeProject.title}}</h1>
           <!-- New Task button-->
-          <button class="button button-clear" ng-click="newTask()">
-            New
+          <button class="button button-icon" ng-click="newTask()">
+          New
           </button>
         </header>
+        
         <content has-header="true">
           <list class="fade-in-not-out">
-            <checkbox ng-repeat="task in activeProject.tasks" ng-change="completionChanged()" ng-model="task.isComplete" ng-class="{complete: task.isComplete}">
+            <checkbox
+            ng-repeat="task in activeProject.tasks" 
+            ng-model="task.isComplete" 
+            ng-class="{complete: task.isComplete}" 
+            ng-change="completionChanged(task)" >
             {{task.title}}
             </checkbox>
           </list>
@@ -60,7 +66,7 @@
 
         <!-- Content of Projects -->
         <content has-header="true">
-          <list show-delete="showDeleteBtn" option-buttons="itemButtons">
+          <list show-delete="showDeleteBtn">
             <item ng-repeat="project in projects" on-delete="onItemDelete(project)" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
               {{project.title}}
             </item>

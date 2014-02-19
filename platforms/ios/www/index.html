@@ -18,23 +18,30 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script src="js/app.js"></script>
   </head>
+
   <body ng-app="todo" ng-controller="TodoCtrl">
     <side-menus>
       <!-- Center content -->
       <pane side-menu-content>
+        
         <header class="bar bar-header bar-positive">
           <button class="button button-icon" ng-click="toggleProjects()">
             <i class="icon ion-navicon"></i>
           </button>
           <h1 class="title">{{activeProject.title}}</h1>
           <!-- New Task button-->
-          <button class="button button-clear" ng-click="newTask()">
-            New
+          <button class="button button-icon icon ion-ios7-plus-outline" ng-click="newTask()">
+
           </button>
         </header>
+        
         <content has-header="true">
-          <list class="fade-in-not-out">
-            <checkbox ng-repeat="task in activeProject.tasks" ng-change="completionChanged()" ng-model="task.isComplete" ng-class="{complete: task.isComplete}">
+          <list class="fade-in-not-out" option-buttons="itemButtons">
+            <checkbox
+            ng-repeat="task in activeProject.tasks" 
+            ng-model="task.isComplete" 
+            ng-class="{complete: task.isComplete}" 
+            ng-change="completionChanged()" >
             {{task.title}}
             </checkbox>
           </list>
@@ -43,15 +50,24 @@
 
       <!-- Left menu -->
       <side-menu side="left">
+        <!-- Header -->
         <header class="bar bar-header bar-positive">
+          <!-- Left delete button -->
+          <button class="button button-icon icon" ng-click="changeBtnStatus()">
+            <i class="ion ion-minus"></i>
+          </button>
+          <!-- Title -->
           <h1 class="title">Projects</h1>
-          <button class="button button-icon" ng-click="newProject()">
+          <!-- Right add button -->
+          <button class="button button-icon icon" ng-click="newProject()">
             <i class="ion ion-plus"></i>
           </button>
         </header>
+
+        <!-- Content of Projects -->
         <content has-header="true">
-          <list>
-            <item ng-repeat="project in projects" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
+          <list show-delete="showDeleteBtn">
+            <item ng-repeat="project in projects" on-delete="onItemDelete(project)" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
               {{project.title}}
             </item>
           </list>

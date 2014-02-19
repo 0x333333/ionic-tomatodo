@@ -15,6 +15,8 @@ angular.module('todo', ['ionic'])
       return [];
     },
     save: function(projects) {
+      console.log("Save!");
+      console.log("Projects:" + angular.toJson(projects));
       window.localStorage['projects'] = angular.toJson(projects);
     },
     newProject: function(projectTitle) {
@@ -74,7 +76,8 @@ angular.module('todo', ['ionic'])
     };
   };
 
-  $scope.completionChanged = function() {
+  $scope.completionChanged = function(task) {
+    task.isComplete = ! task.isComplete;
     Projects.save($scope.projects);
   };
 
@@ -90,6 +93,9 @@ angular.module('todo', ['ionic'])
     $scope.projects.splice($scope.projects.indexOf(project), 1);
     // Save to local storage
     Projects.save($scope.projects);
+    if ($scope.projects.length == 0) {
+      $scope.showDeleteBtn = false;
+    };
   };
 
 
@@ -102,6 +108,7 @@ angular.module('todo', ['ionic'])
     focusFirstInput: false,
     scope: $scope
   });
+
 
 
 
@@ -126,11 +133,12 @@ angular.module('todo', ['ionic'])
   };
 
   $scope.closeNewTask = function() {
-    $scope.taskModal.hide();
+    $scope.taskModal.hide();  
   }
 
   $scope.toggleProjects = function() {
     $scope.sideMenuController.toggleLeft();
+    $scope.showDeleteBtn = false;
   };
 
 

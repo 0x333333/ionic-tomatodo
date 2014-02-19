@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ToDo</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <link rel="stylesheet" href="lib/css/ionic.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <script src="lib/js/ionic.js"></script>
+    <script src="lib/js/angular/angular.js"></script>
+    <script src="lib/js/angular-ui/angular-ui-router.js"></script>
+    <script src="lib/js/angular/angular-animate.js"></script>
+    <script src="lib/js/angular/angular-touch.js"></script>
+    <script src="lib/js/angular/angular-sanitize.js"></script>
+    <script src="lib/js/ionic-angular.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="js/app.js"></script>
+  </head>
+  <body ng-app="todo" ng-controller="TodoCtrl">
+    <side-menus>
+      <!-- Center content -->
+      <pane side-menu-content>
+        <header class="bar bar-header bar-positive">
+          <button class="button button-icon" ng-click="toggleProjects()">
+            <i class="icon ion-navicon"></i>
+          </button>
+          <h1 class="title">{{activeProject.title}}</h1>
+          <!-- New Task button-->
+          <button class="button button-clear" ng-click="newTask()">
+            New
+          </button>
+        </header>
+        <content has-header="true">
+          <list class="fade-in-not-out">
+            <checkbox ng-repeat="task in activeProject.tasks" ng-change="completionChanged()" ng-model="task.isComplete" ng-class="{complete: task.isComplete}">
+            {{task.title}}
+            </checkbox>
+          </list>
+        </content>
+      </pane>
+
+      <!-- Left menu -->
+      <side-menu side="left">
+        <header class="bar bar-header bar-positive">
+          <h1 class="title">Projects</h1>
+          <button class="button button-icon" ng-click="newProject()">
+            <i class="ion ion-plus"></i>
+          </button>
+        </header>
+        <content has-header="true">
+          <list>
+            <item ng-repeat="project in projects" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
+              {{project.title}}
+            </item>
+          </list>
+        </content>
+      </side-menu>
+    </side-menus>
+
+    <script id="new-task.html" type="text/ng-template">
+      <div class="modal">
+        <header class="bar bar-header bar-positive">
+          <h1 class="title">New Task</h1>
+          <button class="button button-clear" ng-click="closeNewTask()">Cancel</button>
+        </header>
+        <content has-header="true">
+          <form ng-submit="createTask(task)">
+            <div class="list">
+              <label class="item item-input">
+                <input type="text" placeholder="What do you need to do?" ng-model="task.title">
+              </label>
+            </div>
+            <div class="padding">
+              <button type="submit" class="button button-block button-primary">Create Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </script>
+  </body>
+</html>

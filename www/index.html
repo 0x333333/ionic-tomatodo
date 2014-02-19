@@ -18,6 +18,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script src="js/app.js"></script>
   </head>
+
   <body ng-app="todo" ng-controller="TodoCtrl">
     <side-menus>
       <!-- Center content -->
@@ -43,15 +44,24 @@
 
       <!-- Left menu -->
       <side-menu side="left">
+        <!-- Header -->
         <header class="bar bar-header bar-positive">
+          <!-- Left delete button -->
+          <button class="button button-icon icon" ng-click="changeBtnStatus()">
+            <i class="ion ion-minus"></i>
+          </button>
+          <!-- Title -->
           <h1 class="title">Projects</h1>
-          <button class="button button-icon" ng-click="newProject()">
+          <!-- Right add button -->
+          <button class="button button-icon icon" ng-click="newProject()">
             <i class="ion ion-plus"></i>
           </button>
         </header>
+
+        <!-- Content of Projects -->
         <content has-header="true">
-          <list>
-            <item ng-repeat="project in projects" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
+          <list show-delete="showDeleteBtn" option-buttons="itemButtons">
+            <item ng-repeat="project in projects" on-delete="onItemDelete(project)" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
               {{project.title}}
             </item>
           </list>

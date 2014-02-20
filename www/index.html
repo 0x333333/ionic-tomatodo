@@ -30,19 +30,27 @@
           </button>
           <h1 class="title">{{activeProject.title}}</h1>
           <!-- New Task button-->
-          <button class="button button-icon" ng-click="newTask()">
-          New
+          <button class="button button-clear" ng-click="newTask()">
+            New
           </button>
         </header>
         
         <content has-header="true">
           <list class="fade-in-not-out">
             <checkbox
+            class="item item-icon-right"
             ng-repeat="task in activeProject.tasks" 
             ng-model="task.isComplete" 
             ng-class="{complete: task.isComplete}" 
-            ng-change="completionChanged(task)" >
+            ng-change="completionChanged(task)" 
+            ng-click="taskClick(task, $event)">
+            
             {{task.title}}
+            
+            <!-- <i class="icon ion-ios7-compose-outline" ng-click="taskClick(task)"></i> -->
+            <!-- <button class="button button-icon">
+              <i class="icon ion-ios7-compose-outline" ng-click="taskClick(task)"></i>
+            </button> -->
             </checkbox>
           </list>
         </content>
@@ -67,8 +75,16 @@
         <!-- Content of Projects -->
         <content has-header="true">
           <list show-delete="showDeleteBtn">
-            <item ng-repeat="project in projects" on-delete="onItemDelete(project)" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
+            <item 
+            class="item item-icon-left item-icon-right" 
+            ng-repeat="project in projects" 
+            on-delete="onItemDelete(project)" 
+            ng-click="selectProject(project, $index)" 
+            ng-class="{active: activeProject == project}">
+              <i class="icon ion-social-apple-outline"></i>
               {{project.title}}
+              <span class="badge badge-positive">{{project.tasks.length}}</span>
+              <i class="icon ion-ios7-arrow-right"></i>
             </item>
           </list>
         </content>

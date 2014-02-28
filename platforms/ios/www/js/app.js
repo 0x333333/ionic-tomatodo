@@ -16,6 +16,7 @@ angular.module('todo', ['ionic'])
     },
     save: function(projects) {
       console.log("Save!");
+      console.log("Projects:" + angular.toJson(projects));
       window.localStorage['projects'] = angular.toJson(projects);
     },
     newProject: function(projectTitle) {
@@ -34,7 +35,7 @@ angular.module('todo', ['ionic'])
   }
 })
 
-.controller('TodoCtrl', function($scope, $timeout, $ionicModal, Projects) {
+.controller('TodoCtrl', function($scope, $timeout, $ionicModal, $ionicActionSheet, Projects) {
 
   // A utility function for creating a new project
   // with the given projectTitle
@@ -43,7 +44,7 @@ angular.module('todo', ['ionic'])
     $scope.projects.push(newProject);
     Projects.save($scope.projects);
     $scope.selectProject(newProject, $scope.projects.length-1);
-  }
+  };
 
 
   // Load or initialize projects
@@ -52,7 +53,7 @@ angular.module('todo', ['ionic'])
 
   $scope.changeBtnStatus = function() {
     $scope.showDeleteBtn = !$scope.showDeleteBtn;
-  }
+  };
 
   // Grab the last active, or the first project
   $scope.activeProject = $scope.projects[Projects.getLastActiveIndex()];
@@ -72,11 +73,68 @@ angular.module('todo', ['ionic'])
       $scope.activeProject = project;
       Projects.setLastActiveIndex(index);
       $scope.sideMenuController.close();
-    };
+    }
   };
 
-  $scope.completionChanged = function() {
+  $scope.completionChanged = function(task) {
+    task.isComplete = ! task.isComplete;
     Projects.save($scope.projects);
+  };
+
+  $scope.taskClick = function(task, $event) {
+    // console.log('Task clicked:' + task.title);
+    // console.log('Task clicked with event:' + $event.target);
+    if ($event.target != "[object HTMLInputElement]") {
+      console.log('Task clicked:' + task.title);
+      
+
+      // Show the action sheet
+      $ionicActionSheet.show({
+
+        // The various non-destructive button choices
+        buttons: [
+          { text: 'Move Top' },
+          { text: 'Edit Task' },
+        ],
+
+        // The text of the red destructive button
+        destructiveText: 'Delete',
+
+        // The title text at the top
+        titleText: 'Menu',
+
+        // The text of the cancel button
+        cancelText: 'Cancel',
+
+        // Called when the sheet is cancelled, either from triggering the
+        // cancel button, or tapping the backdrop, or using escape on the keyboard
+        cancel: function() {
+        },
+
+        // Called when one of the non-destructive buttons is clicked, with
+        // the index of the button that was clicked. Return
+        // "true" to tell the action sheet to close. Return false to not close.
+        buttonClicked: function(index) {
+          if (index === 0) {
+            // Move task up 
+          } else if (index === 1) {
+            // Edit task
+          }
+          return true;
+        },
+
+        // Called when the destructive button is clicked. Return true to close the
+        // action sheet. False to keep it open
+        destructiveButtonClicked: function() {
+          var indexOfActiveProject = $scope.projects.indexOf($scope.activeProject);
+          var indexOfTask = $scope.activeProject.tasks.indexOf(task);
+          console.log('index of task:' + indexOfTask);
+          $scope.projects[indexOfActiveProject].tasks.splice(indexOfTask, 1);
+          Projects.save($scope.projects);
+          return true;
+        }
+      });
+    }
   };
 
   // Called to deleted selected project
@@ -93,7 +151,7 @@ angular.module('todo', ['ionic'])
     Projects.save($scope.projects);
     if ($scope.projects.length == 0) {
       $scope.showDeleteBtn = false;
-    };
+    }
   };
 
 
@@ -109,23 +167,7 @@ angular.module('todo', ['ionic'])
 
 
 
-  // Initialize option button
-  $scope.itemButtons = [
-    {
-      text: 'Edit',
-      type: 'button-assertive',
-      onTap: function(item) {
-        alert('Edit Item: ' + item.id);
-      }
-    },
-    {
-      text: 'Share',
-      type: 'button-calm',
-      onTap: function(item) {
-        alert('Share Item: ' + item.id);
-      }
-    }
-  ];
+
 
   $scope.createTask = function(task) {
     if(!$scope.activeProject) {

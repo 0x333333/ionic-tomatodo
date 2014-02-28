@@ -57,6 +57,8 @@ angular.module('todo', ['ionic'])
 
   // Grab the last active, or the first project
   $scope.activeProject = $scope.projects[Projects.getLastActiveIndex()];
+  // Set the active task to be modified
+  $scope.activeTask = null;
 
   // Called to create a new project
   $scope.newProject = function() {
@@ -85,7 +87,8 @@ angular.module('todo', ['ionic'])
     // console.log('Task clicked:' + task.title);
     // console.log('Task clicked with event:' + $event.target);
     if ($event.target != "[object HTMLInputElement]") {
-      console.log('Task clicked:' + task.title);
+      console.log(task.$$hashKey);
+      $scope.activeTask = task;
       
 
       // Show the action sheet
@@ -93,17 +96,15 @@ angular.module('todo', ['ionic'])
 
         // The various non-destructive button choices
         buttons: [
-          { text: 'Edit' },
-          { text: 'Share' },
-          { text: 'Finish' },
           { text: 'Move Top' },
+          { text: 'Edit Task' },
         ],
 
         // The text of the red destructive button
         destructiveText: 'Delete',
 
         // The title text at the top
-        titleText: 'Modify your task',
+        titleText: 'Menu',
 
         // The text of the cancel button
         cancelText: 'Cancel',
@@ -118,17 +119,28 @@ angular.module('todo', ['ionic'])
         // "true" to tell the action sheet to close. Return false to not close.
         buttonClicked: function(index) {
           if (index === 0) {
-
+            // Move task up 
+            var indexOfActiveProject = $scope.projects.indexOf($scope.activeProject);
+            var indexOfTask = $scope.activeProject.tasks.indexOf(task);
+            console.log('index of task:' + indexOfTask);
+            $scope.projects[indexOfActiveProject].tasks.splice(indexOfTask, 1);
+            $scope.projects[indexOfActiveProject].tasks.unshift(task);
+            Projects.save($scope.projects);
           } else if (index === 1) {
-
+            // Edit task
+            $scope.EditTaskModal.show();
           }
-          console.log('Button index:' + index);
           return true;
         },
 
         // Called when the destructive button is clicked. Return true to close the
         // action sheet. False to keep it open
         destructiveButtonClicked: function() {
+          var indexOfActiveProject = $scope.projects.indexOf($scope.activeProject);
+          var indexOfTask = $scope.activeProject.tasks.indexOf(task);
+          console.log('index of task:' + indexOfTask);
+          $scope.projects[indexOfActiveProject].tasks.splice(indexOfTask, 1);
+          Projects.save($scope.projects);
           return true;
         }
       });
@@ -157,12 +169,19 @@ angular.module('todo', ['ionic'])
 
   // Create our modal
   $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
-    $scope.taskModal = modal;
+    $scope.NewTaskModal = modal;
   }, {
     focusFirstInput: false,
     scope: $scope
   });
 
+  // Modify our modal
+  $ionicModal.fromTemplateUrl('edit-task.html', function(modal) {
+    $scope.EditTaskModal = modal;
+  }, {
+    focusFirstInput: false,
+    scope: $scope
+  });
 
 
 
@@ -174,7 +193,21 @@ angular.module('todo', ['ionic'])
     $scope.activeProject.tasks.push({
       title: task.title
     });
-    $scope.taskModal.hide();
+    $scope.NewTaskModal.hide();
+
+    // Inefficient, but save all the projects
+    Projects.save($scope.projects);
+
+    task.title = "";
+  };
+
+  $scope.modifyTask = function(task) {
+    if(!$scope.activeProject) {
+      return;
+    }
+    var indexofSelectedTask = $scope.activeProject.tasks.indexOf($scope.activeTask);
+    $scope.activeProject.tasks[indexofSelectedTask].title = task.title;
+    $scope.EditTaskModal.hide();
 
     // Inefficient, but save all the projects
     Projects.save($scope.projects);
@@ -183,11 +216,15 @@ angular.module('todo', ['ionic'])
   };
 
   $scope.newTask = function() {
-    $scope.taskModal.show();
+    $scope.NewTaskModal.show();
   };
 
   $scope.closeNewTask = function() {
-    $scope.taskModal.hide();  
+    $scope.NewTaskModal.hide();  
+  }
+
+  $scope.closeEditTask = function() {
+    $scope.EditTaskModal.hide();  
   }
 
   $scope.toggleProjects = function() {

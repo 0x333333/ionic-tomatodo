@@ -111,5 +111,26 @@
         </div>
       </div>
     </script>
+
+    <script id="edit-task.html" type="text/ng-template">
+      <div class="modal">
+        <header class="bar bar-header bar-positive">
+          <h1 class="title">Modify Task</h1>
+          <button class="button button-clear" ng-click="closeEditTask()">Cancel</button>
+        </header>
+        <content has-header="true">
+          <form ng-submit="modifyTask(task)">
+            <div class="list">
+              <label class="item item-input">
+                <input type="text" placeholder="Please input a new name of task." ng-model="task.title">
+              </label>
+            </div>
+            <div class="padding">
+              <button type="submit" class="button button-block button-primary">Modify Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </script>
   </body>
 </html>

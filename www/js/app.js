@@ -205,8 +205,11 @@ angular.module('todo', ['ionic'])
     if(!$scope.activeProject) {
       return;
     }
+    // Get the index of selected task
     var indexofSelectedTask = $scope.activeProject.tasks.indexOf($scope.activeTask);
+    // Set the new name to selected task
     $scope.activeProject.tasks[indexofSelectedTask].title = task.title;
+    // Close dialog
     $scope.EditTaskModal.hide();
 
     // Inefficient, but save all the projects

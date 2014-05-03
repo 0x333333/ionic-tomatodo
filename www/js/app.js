@@ -98,6 +98,7 @@ angular.module('todo', ['ionic'])
         buttons: [
           { text: 'Move Top' },
           { text: 'Edit Task' },
+          { text: 'Share To SNS' },
         ],
 
         // The text of the red destructive button
@@ -129,6 +130,9 @@ angular.module('todo', ['ionic'])
           } else if (index === 1) {
             // Edit task
             $scope.EditTaskModal.show();
+          } else if (index === 2) {
+            // Share to social networks
+            $scope.snsClick(task);
           }
           return true;
         },
@@ -145,6 +149,50 @@ angular.module('todo', ['ionic'])
         }
       });
     }
+  };
+
+  $scope.snsClick = function(task) {
+    $scope.activeTask = task;
+
+    // Show the action sheet
+    $ionicActionSheet.show({
+
+      // The various non-destructive button choices
+      buttons: [
+        { text: 'Facebook' },
+        { text: 'Twitter' },
+        { text: 'Google Plus' },
+      ],
+
+      // The title text at the top
+      titleText: 'Share to',
+
+      // The text of the cancel button
+      cancelText: 'Cancel',
+
+      // Called when the sheet is cancelled, either from triggering the
+      // cancel button, or tapping the backdrop, or using escape on the keyboard
+      cancel: function() {
+        //
+      },
+
+      // Called when one of the non-destructive buttons is clicked, with
+      // the index of the button that was clicked. Return
+      // "true" to tell the action sheet to close. Return false to not close.
+      buttonClicked: function(index) {
+        if (index === 0) {
+          // Move task up 
+          console.log('Facebook');
+        } else if (index === 1) {
+          // Edit task
+          console.log('Twitter');
+        } else if (index === 2) {
+          // Share to social networks
+          console.log('Google Plus');
+        }
+        return true;
+      },
+    });
   };
 
   // Called to deleted selected project

@@ -74,14 +74,14 @@
         <!-- Header -->
         <header class="bar bar-header bar-positive">
           <!-- Left delete button -->
-          <button class="button button-icon icon" ng-click="changeBtnStatus()">
-            <i class="ion ion-minus"></i>
+          <button class="button button-icon" ng-click="changeBtnStatus()">
+            <i class="icon ion-ios7-minus-empty"></i>
           </button>
           <!-- Title -->
           <h1 class="title">Projects</h1>
           <!-- Right add button -->
-          <button class="button button-icon icon" ng-click="newProject()">
-            <i class="ion ion-plus"></i>
+          <button class="button button-icon" ng-click="newProject()">
+            <i class="icon ion-ios7-plus-empty"></i>
           </button>
         </header>
 
@@ -110,26 +110,38 @@
       <side-menu side="right">
         <!-- Header -->
         <header class="bar bar-header bar-positive">
-          <!-- Left delete button -->
-          <button class="button button-icon icon" ng-click="back()">
-            <i class="ion ion-ios7-arrow-back"></i>
+          <button class="button button-icon" ng-click="toggleProjects()">
+            <i class="icon ion-ios7-arrow-left"></i>
           </button>
-          <!-- Title -->
-          <h1 class="title">Setting</h1>
+          <h1 class="title">Settings</h1>
+          <!-- New Task button-->
+          <!-- <button class="button button-clear" ng-click="newTask()">
+            New
+          </button> -->
         </header>
 
         <!-- Content of Projects -->
         <content has-header="true">
           <div class="list card">
-          <a class="item item-icon-left">
-            <i class="icon ion-ios7-upload-outline"></i>
-            Export Data
-          </a>
-          <a class="item item-icon-left">
-            <i class="icon ion-ios7-download-outline"></i>
-            Import Data
-          </a>
-        </div>
+            <a class="item item-icon-left">
+              <i class="icon ion-ios7-upload-outline"></i>
+              Export Data
+            </a>
+            <a class="item item-icon-left">
+              <i class="icon ion-ios7-download-outline"></i>
+              Import Data
+            </a>
+          </div>
+          <div class="list card">
+            <a class="item item-icon-left">
+              <i class="icon ion-ios7-upload-outline"></i>
+              Export Data
+            </a>
+            <a class="item item-icon-left">
+              <i class="icon ion-ios7-download-outline"></i>
+              Import Data
+            </a>
+          </div>
         </content>
       </side-menu>
 

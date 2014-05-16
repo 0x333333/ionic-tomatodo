@@ -21,9 +21,11 @@
 
   <body ng-app="todo" ng-controller="TodoCtrl">
     <side-menus>
+
       <!-- Center content -->
       <pane side-menu-content>
         
+        <!-- Header -->
         <header class="bar bar-header bar-positive">
           <button class="button button-icon" ng-click="toggleProjects()">
             <i class="icon ion-navicon"></i>
@@ -34,27 +36,38 @@
             New
           </button>
         </header>
+
+        <!-- Search bar -->
+        <div class="bar-subheader item item-input-inset has-header">
+          <label class="item-input-wrapper">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" placeholder="Search task" ng-model="query" autocorrect="off">
+          </label>
+        </div>
         
-        <content has-header="true">
+        <!-- Result list -->
+        <content has-header="true" has-subheader="true">
           <list class="fade-in-not-out">
             <checkbox
             class="item item-icon-right"
-            ng-repeat="task in activeProject.tasks" 
+            type="item-text-wrap"
+            ng-repeat="task in activeProject.tasks | filter:query" 
             ng-model="task.isComplete" 
             ng-class="{complete: task.isComplete}" 
             ng-change="completionChanged(task)" 
             ng-click="taskClick(task, $event)">
             
-            {{task.title}}
+              {{task.title}}
+              <span class="item-note">
+                {{task.deadline}}
+              </span>
             
-            <!-- <i class="icon ion-ios7-compose-outline" ng-click="taskClick(task)"></i> -->
-            <!-- <button class="button button-icon">
-              <i class="icon ion-ios7-compose-outline" ng-click="taskClick(task)"></i>
-            </button> -->
             </checkbox>
           </list>
         </content>
       </pane>
+
+
 
       <!-- Left menu -->
       <side-menu side="left">
@@ -90,6 +103,9 @@
         </content>
       </side-menu>
 
+
+
+
       <!-- Right menu -->
       <side-menu side="right">
         <!-- Header -->
@@ -119,6 +135,13 @@
 
     </side-menus>
 
+
+
+
+
+
+    <!-- New task modal -->
+
     <script id="new-task.html" type="text/ng-template">
       <div class="modal">
         <header class="bar bar-header bar-positive">
@@ -127,18 +150,35 @@
         </header>
         <content has-header="true">
           <form ng-submit="createTask(task)">
-            <div class="list">
+            <div class="list list-inset">
               <label class="item item-input">
-                <input type="text" placeholder="What do you need to do?" ng-model="task.title">
+                <span class="input-label">Title</span>
+                <input type="text" placeholder="Title of task" ng-model="task.title">
+              </label>
+              <label class="item item-input">
+                <span class="input-label">Content</span>
+                <input type="text" placeholder="What do you need to do" ng-model="task.content">
+              </label>
+              <label class="item item-input">
+                <span class="input-label">Date</span>
+                <input type="date" ng-model="task.deadline">
+              </label>
+              <label class="item item-input">
+                <span class="input-label">Tags</span>
+                <input type="text" placeholder="Separate with comma" ng-model="task.tags">
               </label>
             </div>
+            
             <div class="padding">
               <button type="submit" class="button button-block button-primary">Create Task</button>
             </div>
+
           </form>
         </div>
       </div>
     </script>
+
+    <!-- Edit task modal -->
 
     <script id="edit-task.html" type="text/ng-template">
       <div class="modal">
@@ -148,9 +188,22 @@
         </header>
         <content has-header="true">
           <form ng-submit="modifyTask(task)">
-            <div class="list">
+            <div class="list list-inset">
               <label class="item item-input">
-                <input type="text" placeholder="Please input a new name of task." ng-model="task.title">
+                <span class="input-label">Title</span>
+                <input type="text" placeholder="{{oldTask.title}}" ng-model="task.title">
+              </label>
+              <label class="item item-input">
+                <span class="input-label">Content</span>
+                <input type="text" placeholder="{{oldTask.content}}" ng-model="task.content">
+              </label>
+              <label class="item item-input">
+                <span class="input-label">Date</span>
+                <input type="date" ng-model="task.deadline">
+              </label>
+              <label class="item item-input">
+                <span class="input-label">Tags</span>
+                <input type="text" placeholder="{{oldTask.tags}}" ng-model="task.tags">
               </label>
             </div>
             <div class="padding">

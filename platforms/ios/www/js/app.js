@@ -1,14 +1,9 @@
 angular.module('todo', ['ionic'])
 
-/**
- * The Projects factory handles saving and loading projects
- * from local storage, and also lets us save and load the
- * last active project index.
- */
 .factory('Projects', function() {
   return {
     all: function() {
-      var projectString = window.localStorage['projects'];
+      var projectString = window.localStorage.projects;
       if(projectString) {
         return angular.fromJson(projectString);
       }
@@ -17,7 +12,7 @@ angular.module('todo', ['ionic'])
     save: function(projects) {
       console.log("Save!");
       console.log("Projects:" + angular.toJson(projects));
-      window.localStorage['projects'] = angular.toJson(projects);
+      window.localStorage.projects = angular.toJson(projects);
     },
     newProject: function(projectTitle) {
       // Add a new project
@@ -27,15 +22,20 @@ angular.module('todo', ['ionic'])
       };
     },
     getLastActiveIndex: function() {
-      return parseInt(window.localStorage['lastActiveProject']) || 0;
+      return parseInt(window.localStorage.lastActiveProject) || 0;
     },
     setLastActiveIndex: function(index) {
-      window.localStorage['lastActiveProject'] = index;
+      window.localStorage.lastActiveProject = index;
     }
-  }
+  };
 })
 
+
 .controller('TodoCtrl', function($scope, $timeout, $ionicModal, $ionicActionSheet, Projects) {
+
+  // Initialize search bar content
+  $scope.query = '';
+  _scope = $scope;
 
   // A utility function for creating a new project
   // with the given projectTitle
@@ -45,7 +45,6 @@ angular.module('todo', ['ionic'])
     Projects.save($scope.projects);
     $scope.selectProject(newProject, $scope.projects.length-1);
   };
-
 
   // Load or initialize projects
   $scope.projects = Projects.all();
@@ -57,6 +56,13 @@ angular.module('todo', ['ionic'])
 
   // Grab the last active, or the first project
   $scope.activeProject = $scope.projects[Projects.getLastActiveIndex()];
+  // Set the active task to be modified
+  $scope.activeTask = null;
+
+  // Called to search tasks in current active project
+  $scope.search = function() {
+    console.log($scope.query);
+  };
 
   // Called to create a new project
   $scope.newProject = function() {
@@ -81,13 +87,13 @@ angular.module('todo', ['ionic'])
     Projects.save($scope.projects);
   };
 
-  $scope.taskClick = function(task, $event) {
-    // console.log('Task clicked:' + task.title);
-    // console.log('Task clicked with event:' + $event.target);
-    if ($event.target != "[object HTMLInputElement]") {
-      console.log('Task clicked:' + task.title);
-      
 
+  // Task click function
+  $scope.taskClick = function(task, $event) {
+    if ($event.target != "[object HTMLInputElement]") {
+      console.log(task.$$hashKey);
+      $scope.activeTask = task;
+      
       // Show the action sheet
       $ionicActionSheet.show({
 
@@ -95,6 +101,7 @@ angular.module('todo', ['ionic'])
         buttons: [
           { text: 'Move Top' },
           { text: 'Edit Task' },
+          { text: 'Share To SNS' },
         ],
 
         // The text of the red destructive button
@@ -117,8 +124,21 @@ angular.module('todo', ['ionic'])
         buttonClicked: function(index) {
           if (index === 0) {
             // Move task up 
+            var indexOfActiveProject = $scope.projects.indexOf($scope.activeProject);
+            var indexOfTask = $scope.activeProject.tasks.indexOf(task);
+            console.log('index of task:' + indexOfTask);
+            $scope.projects[indexOfActiveProject].tasks.splice(indexOfTask, 1);
+            $scope.projects[indexOfActiveProject].tasks.unshift(task);
+            Projects.save($scope.projects);
           } else if (index === 1) {
             // Edit task
+            $scope.EditTaskModal.show();
+            var indexofSelectedTask = $scope.activeProject.tasks.indexOf($scope.activeTask);
+            $scope.oldTask = $scope.activeProject.tasks[indexofSelectedTask];
+            console.log($scope.oldTask);
+          } else if (index === 2) {
+            // Share to social networks
+            $scope.snsClick(task);
           }
           return true;
         },
@@ -137,6 +157,49 @@ angular.module('todo', ['ionic'])
     }
   };
 
+  // SNS click function
+  $scope.snsClick = function(task) {
+    $scope.activeTask = task;
+
+    // Show the action sheet
+    $ionicActionSheet.show({
+
+      // The various non-destructive button choices
+      buttons: [
+        { text: 'Facebook' },
+        { text: 'Twitter' },
+      ],
+
+      // The title text at the top
+      titleText: 'Share to',
+
+      // The text of the cancel button
+      cancelText: 'Cancel',
+
+      // Called when the sheet is cancelled, either from triggering the
+      // cancel button, or tapping the backdrop, or using escape on the keyboard
+      cancel: function() {
+        //
+      },
+
+      // Called when one of the non-destructive buttons is clicked, with
+      // the index of the button that was clicked. Return
+      // "true" to tell the action sheet to close. Return false to not close.
+      buttonClicked: function(index) {
+        if (index === 0) {
+          // Move task up 
+          console.log('Facebook');
+          window.open('http://www.facebook.com/sharer.php?s=100&p[title]=TODO' + '&p[summary]=I\'m working on' + task.title + '&p[url]=http://todo.zhipengjiang.com', 'location=no,toolbar=0');
+        } else if (index === 1) {
+          // Edit task
+          window.open('https://twitter.com/intent/tweet?text=I\'m working on '+task.title+' with&hashtags=TODO', '_blank', 'location=no,toolbar=yes');
+          console.log('Twitter');
+        }
+        return true;
+      },
+    });
+  };
+
   // Called to deleted selected project
   $scope.onItemDelete = function(project) {
     console.log('project:' + project);
@@ -149,7 +212,7 @@ angular.module('todo', ['ionic'])
     $scope.projects.splice($scope.projects.indexOf(project), 1);
     // Save to local storage
     Projects.save($scope.projects);
-    if ($scope.projects.length == 0) {
+    if ($scope.projects.length === 0) {
       $scope.showDeleteBtn = false;
     }
   };
@@ -157,40 +220,80 @@ angular.module('todo', ['ionic'])
 
 
 
-  // Create our modal
+  // Create new task modal
   $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
-    $scope.taskModal = modal;
+    $scope.NewTaskModal = modal;
+  }, {
+    focusFirstInput: false,
+    scope: $scope
+  });
+
+  // Modify task modal
+  $ionicModal.fromTemplateUrl('edit-task.html', function(modal) {
+    $scope.EditTaskModal = modal;
   }, {
     focusFirstInput: false,
     scope: $scope
   });
 
 
-
-
-
   $scope.createTask = function(task) {
     if(!$scope.activeProject) {
       return;
     }
+
     $scope.activeProject.tasks.push({
-      title: task.title
+      title   : task.title,
+      content : task.content,
+      deadline: task.deadline,
+      tags    : task.tags
     });
-    $scope.taskModal.hide();
+
+    $scope.NewTaskModal.hide();
 
     // Inefficient, but save all the projects
     Projects.save($scope.projects);
 
-    task.title = "";
+    task.title    = "";
+    task.content  = "";
+    task.deadline = "";
+    task.tags     = "";
+  };
+
+  $scope.modifyTask = function(task) {
+    if(!$scope.activeProject) {
+      return;
+    }
+    // Get the index of selected task
+    var indexofSelectedTask = $scope.activeProject.tasks.indexOf($scope.activeTask);
+    // Set the new name to selected task
+    $scope.activeProject.tasks[indexofSelectedTask].title    = task.title;
+    $scope.activeProject.tasks[indexofSelectedTask].content  = task.content;
+    $scope.activeProject.tasks[indexofSelectedTask].deadline = task.deadline;
+    $scope.activeProject.tasks[indexofSelectedTask].tags     = task.tags;
+    // Close dialog
+    $scope.EditTaskModal.hide();
+
+    // Inefficient, but save all the projects
+    Projects.save($scope.projects);
+
+    task.title    = "";
+    task.content  = "";
+    task.deadline = "";
+    task.tags     = "";
   };
 
   $scope.newTask = function() {
-    $scope.taskModal.show();
+    $scope.NewTaskModal.show();
   };
 
   $scope.closeNewTask = function() {
-    $scope.taskModal.hide();  
-  }
+    $scope.NewTaskModal.hide();  
+  };
+
+  $scope.closeEditTask = function() {
+    $scope.EditTaskModal.hide();  
+  };
 
   $scope.toggleProjects = function() {
     $scope.sideMenuController.toggleLeft();
@@ -202,7 +305,7 @@ angular.module('todo', ['ionic'])
   // this by using $timeout so everything is initialized
   // properly
   $timeout(function() {
-    if($scope.projects.length == 0) {
+    if($scope.projects.length === 0) {
       while(true) {
         var projectTitle = prompt('Your first project title:');
         if(projectTitle) {

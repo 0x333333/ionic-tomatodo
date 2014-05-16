@@ -1,82 +1,143 @@
-<html ng-app="todo">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Ionic List Directive</title>
-   
-    <link href="http://code.ionicframework.com/0.9.24/css/ionic.min.css" rel="stylesheet">
-    <script src="http://code.ionicframework.com/0.9.24/js/ionic.bundle.min.js"></script>
-  </head>
+<!DOCTYPE HTML>
+<html>
 
-  <body>
-    
-    <pane ng-controller="MyCtrl">
-      
-      <header class="bar bar-header bar-positive">
-        <div class="buttons">
-          <button class="button button-icon icon ion-ios7-minus-outline" ng-click="showDelete=!showDelete"></button>
-        </div>
-        <h1 class="title">Ionic Delete/Option Buttons</h1>
-      </header>
-      
-      <content class="has-header">
-      
-        <list show-delete="showDelete"
-              on-delete="onItemDelete(item)"
-              option-buttons="itemButtons">
-              
-          <item ng-repeat="item in items" 
-                item="item"
-                href="#/item/{{item.id}}">
-            Item {{ item.id }}
-          </list>
-          
-      </content>
-      
-    </pane>
+<head>
+<meta name="viewport" content="width=320; user-scalable=no" />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Minimal AppLaud App</title>
 
-  </body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" charset="utf-8">
+var fileSystem;
 
-  <script>
-  angular.module('todo', ['ionic'])
+//generic getById
+function getById(id) {
+    return document.querySelector(id);
+}
+//generic content logger
+function logit(s) {
+    getById("#content").innerHTML += s;
+}
 
-  .controller('MyCtrl', function($scope) {
-    
-    $scope.itemButtons = [
-      {
-        text: 'Edit',
-        type: 'button-assertive',
-        onTap: function(item) {
-          alert('Edit Item: ' + item.id);
+//generic error handler
+function onError(e) {
+    getById("#content").innerHTML = "<h2>Error</h2>"+e.toString();
+}
+
+function doDeleteFile(e) {
+    fileSystem.root.getFile("test.txt", {create:true}, function(f) {
+        f.remove(function() {
+            logit("File removed<p/>"); 
+        });
+    }, onError);
+}
+
+function metadataFile(m) {
+    logit("File was last modified "+m.modificationTime+"<p/>");    
+}
+
+function doMetadataFile(e) {
+    fileSystem.root.getFile("test.txt", {create:true}, function(f) {
+        f.getMetadata(metadataFile,onError);
+    }, onError);
+}
+
+function readFile(f) {
+    reader = new FileReader();
+    reader.onloadend = function(e) {
+        console.log("go to end");
+        logit("<pre>" + e.target.result + "</pre><p/>");
+    }
+    reader.readAsText(f);
+}
+
+function doReadFile(e) {
+    fileSystem.root.getFile("test.txt", {create:true}, readFile, onError);
+}
+
+function appendFile(f) {
+
+    f.createWriter(function(writerOb) {
+        writerOb.onwrite=function() {
+            logit("Done writing to file.<p/>");
         }
-      },
-      {
-        text: 'Share',
-        type: 'button-calm',
-        onTap: function(item) {
-          alert('Share Item: ' + item.id);
-        }
-      }
-    ];
-    
-    $scope.onItemDelete = function(item) {
-      $scope.items.splice($scope.items.indexOf(item), 1);
-    };
-    
-    $scope.items = [
-      { id: 1 },
-      { id: 2 },
-      { id: 3 },
-      { id: 4 },
-      { id: 5 },
-      { id: 6 },
-      { id: 7 },
-      { id: 8 },
-      { id: 9 },
-      { id: 10 }
-    ];
-    
-  });
+        //go to the end of the file...
+        writerOb.seek(writerOb.length);
+        writerOb.write("Test at "+new Date().toString() + "\n");
+    })
 
-  </script>
+}
+
+function doAppendFile(e) {
+    fileSystem.root.getFile("test.txt", {create:true}, appendFile, onError);
+}
+
+function gotFiles(entries) {
+    var s = "";
+    for(var i=0,len=entries.length; i<len; i++) {
+        //entry objects include: isFile, isDirectory, name, fullPath
+        s+= entries[i].fullPath;
+        if (entries[i].isFile) {
+            s += " [F]";
+        }
+        else {
+            s += " [D]";
+        }
+        s += "<br/>";
+        
+    }
+    s+="<p/>";
+    logit(s);
+}
+
+function doDirectoryListing(e) {
+    //get a directory reader from our FS
+    var dirReader = fileSystem.root.createReader();
+
+    dirReader.readEntries(gotFiles,onError);        
+}
+
+function onFSSuccess(fs) {
+    fileSystem = fs;
+
+    getById("#dirListingButton").addEventListener("touchstart",doDirectoryListing);            
+    getById("#addFileButton").addEventListener("touchstart",doAppendFile);            
+    getById("#readFileButton").addEventListener("touchstart",doReadFile);            
+    getById("#metadataFileButton").addEventListener("touchstart",doMetadataFile);            
+    getById("#deleteFileButton").addEventListener("touchstart",doDeleteFile);            
+    
+    logit( "Got the file system: "+fileSystem.name +"<br/>" +
+                                    "root entry name is "+fileSystem.root.name + "<p/>")    
+
+    doDirectoryListing();
+} 
+
+function onDeviceReady() {
+
+    //request the persistent file system
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFSSuccess, onError);
+    
+}
+
+function init() {
+    document.addEventListener("deviceready", onDeviceReady, true);
+} 
+</script> 
+
+<style>
+button { width: 100%; padding: 5px; }
+</style>
+</head>
+
+<body onload="init();" id="stage" class="theme">
+
+<button id="addFileButton">Create/Append to Test File</button>
+<button id="readFileButton">Read Test File</button>
+<button id="metadataFileButton">Get Test File Metadata</button>
+<button id="deleteFileButton">Delete Test File</button>
+<button id="dirListingButton">Show Directory Contents</button>
+
+<div id="content"></div>
+
+</body>
 </html>

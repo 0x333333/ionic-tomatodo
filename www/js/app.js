@@ -16,17 +16,13 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
     url: "/app",
     templateUrl: "templates/home.html",
     controller: 'AppCtrl'
-  });
+  })
 
-  // .state('app.home', {
-  //   url: "/home",
-  //   views: {
-  //     'menuContent': {
-  //       templateUrl: "templates/home.html",
-  //       controller: 'HomeCtrl'
-  //     }
-  //   }
-  // });
+  .state('about', {
+    url: '/about',
+    templateUrl: 'templates/about.html',
+    controller: 'AboutCtrl'
+  });
 
 
   // if none of the above states are matched, use this as the fallback

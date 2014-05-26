@@ -262,4 +262,10 @@ angular.module('starter.controllers', [])
 		}
 	});
 
+})
+
+.controller('AboutCtrl', function($scope, $window) {
+	$scope.back = function() {
+    window.history.back();
+  };
 });

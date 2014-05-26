@@ -2,228 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title>ToDo</title>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <link rel="stylesheet" href="lib/css/ionic.css">
-    <link rel="stylesheet" href="css/app.css">
+    <link href="lib/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
-    <script src="lib/js/ionic.js"></script>
-    <script src="lib/js/angular/angular.js"></script>
-    <script src="lib/js/angular-ui/angular-ui-router.js"></script>
-    <script src="lib/js/angular/angular-animate.js"></script>
-    <script src="lib/js/angular/angular-touch.js"></script>
-    <script src="lib/js/angular/angular-sanitize.js"></script>
-    <script src="lib/js/ionic-angular.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
+    <!-- ionic/angularjs js -->
+    <script src="lib/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
     <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
   </head>
 
-  <body ng-app="todo" ng-controller="TodoCtrl">
-    <side-menus>
-
-      <!-- Center content -->
-      <pane side-menu-content>
-        
-        <!-- Header -->
-        <header class="bar bar-header bar-positive">
-          <button class="button button-icon" ng-click="toggleProjects()">
-            <i class="icon ion-navicon"></i>
-          </button>
-          <h1 class="title">{{activeProject.title}}</h1>
-          <!-- New Task button-->
-          <button class="button button-clear" ng-click="newTask()">
-            New
-          </button>
-        </header>
-
-        <!-- Search bar -->
-        <div class="bar-subheader item item-input-inset has-header">
-          <label class="item-input-wrapper">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input type="text" placeholder="Search task" ng-model="query" autocorrect="off">
-          </label>
-        </div>
-        
-        <!-- Result list -->
-        <content has-header="true" has-subheader="true">
-          <list class="fade-in-not-out">
-            <checkbox
-            class="item item-icon-right"
-            type="item-text-wrap"
-            ng-repeat="task in activeProject.tasks | filter:query" 
-            ng-model="task.isComplete" 
-            ng-class="{complete: task.isComplete}" 
-            ng-change="completionChanged(task)" 
-            ng-click="taskClick(task, $event)">
-            
-              {{task.title}}
-              <span class="item-note">
-                {{task.deadline}}
-              </span>
-            
-            </checkbox>
-          </list>
-        </content>
-      </pane>
-
-
-
-      <!-- Left menu -->
-      <side-menu side="left">
-        <!-- Header -->
-        <header class="bar bar-header bar-positive">
-          <!-- Left delete button -->
-          <button class="button button-icon" ng-click="changeBtnStatus()">
-            <i class="icon ion-ios7-minus-empty"></i>
-          </button>
-          <!-- Title -->
-          <h1 class="title">Projects</h1>
-          <!-- Right add button -->
-          <button class="button button-icon" ng-click="newProject()">
-            <i class="icon ion-ios7-plus-empty"></i>
-          </button>
-        </header>
-
-        <!-- Content of Projects -->
-        <content has-header="true">
-          <list show-delete="showDeleteBtn">
-            <item 
-            class="item item-icon-left item-icon-right" 
-            ng-repeat="project in projects" 
-            on-delete="onItemDelete(project)" 
-            ng-click="selectProject(project, $index)" 
-            ng-class="{active: activeProject == project}">
-              <i class="icon ion-social-apple-outline"></i>
-              {{project.title}}
-              <span class="badge badge-positive">{{project.tasks.length}}</span>
-              <i class="icon ion-ios7-arrow-right"></i>
-            </item>
-          </list>
-        </content>
-      </side-menu>
-
-
-
-
-      <!-- Right menu -->
-      <side-menu side="right">
-        <!-- Header -->
-        <header class="bar bar-header bar-positive">
-          <button class="button button-icon" ng-click="toggleProjects()">
-            <i class="icon ion-ios7-arrow-left"></i>
-          </button>
-          <h1 class="title">Settings</h1>
-          <!-- New Task button-->
-          <!-- <button class="button button-clear" ng-click="newTask()">
-            New
-          </button> -->
-        </header>
-
-        <!-- Content of Projects -->
-        <content has-header="true">
-          <div class="list card">
-            <a class="item item-icon-left">
-              <i class="icon ion-ios7-upload-outline"></i>
-              Export Data
-            </a>
-            <a class="item item-icon-left">
-              <i class="icon ion-ios7-download-outline"></i>
-              Import Data
-            </a>
-          </div>
-          <div class="list card">
-            <a class="item item-icon-left">
-              <i class="icon ion-ios7-upload-outline"></i>
-              Export Data
-            </a>
-            <a class="item item-icon-left">
-              <i class="icon ion-ios7-download-outline"></i>
-              Import Data
-            </a>
-          </div>
-        </content>
-      </side-menu>
-
-    </side-menus>
-
-
-
-
-
-
-    <!-- New task modal -->
-
-    <script id="new-task.html" type="text/ng-template">
-      <div class="modal">
-        <header class="bar bar-header bar-positive">
-          <h1 class="title">New Task</h1>
-          <button class="button button-clear" ng-click="closeNewTask()">Cancel</button>
-        </header>
-        <content has-header="true">
-          <form ng-submit="createTask(task)">
-            <div class="list list-inset">
-              <label class="item item-input">
-                <span class="input-label">Title</span>
-                <input type="text" placeholder="Title of task" ng-model="task.title">
-              </label>
-              <label class="item item-input">
-                <span class="input-label">Content</span>
-                <input type="text" placeholder="What do you need to do" ng-model="task.content">
-              </label>
-              <label class="item item-input">
-                <span class="input-label">Date</span>
-                <input type="date" ng-model="task.deadline">
-              </label>
-              <label class="item item-input">
-                <span class="input-label">Tags</span>
-                <input type="text" placeholder="Separate with comma" ng-model="task.tags">
-              </label>
-            </div>
-            
-            <div class="padding">
-              <button type="submit" class="button button-block button-primary">Create Task</button>
-            </div>
-
-          </form>
-        </div>
-      </div>
-    </script>
-
-    <!-- Edit task modal -->
-
-    <script id="edit-task.html" type="text/ng-template">
-      <div class="modal">
-        <header class="bar bar-header bar-positive">
-          <h1 class="title">Modify Task</h1>
-          <button class="button button-clear" ng-click="closeEditTask()">Cancel</button>
-        </header>
-        <content has-header="true">
-          <form ng-submit="modifyTask(task)">
-            <div class="list list-inset">
-              <label class="item item-input">
-                <span class="input-label">Title</span>
-                <input type="text" placeholder="{{oldTask.title}}" ng-model="task.title">
-              </label>
-              <label class="item item-input">
-                <span class="input-label">Content</span>
-                <input type="text" placeholder="{{oldTask.content}}" ng-model="task.content">
-              </label>
-              <label class="item item-input">
-                <span class="input-label">Date</span>
-                <input type="date" ng-model="task.deadline">
-              </label>
-              <label class="item item-input">
-                <span class="input-label">Tags</span>
-                <input type="text" placeholder="{{oldTask.tags}}" ng-model="task.tags">
-              </label>
-            </div>
-            <div class="padding">
-              <button type="submit" class="button button-block button-primary">Modify Task</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </script>
+  <body ng-app="starter">
+    <ion-nav-view></ion-nav-view>
   </body>
 </html>

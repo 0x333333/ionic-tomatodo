@@ -1,35 +1,35 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['starter.controller_charts'])
 
-.controller('AppCtrl', function($scope, $timeout, $ionicModal, $ionicActionSheet, Projects) {
+.controller('AppCtrl', function($scope, $timeout, $ionicModal, $ionicActionSheet, $window, ProjectService) {
 
 	////////////////////////   Parameters   ////////////////////////
 
-	_scope        = $scope;
-	$scope.query  = '';
-	
+	_scope         = $scope;
+	$scope.query   = '';
+	$scope.history = ProjectService.getHistory();
 
 	////////////////////////   Project   ////////////////////////
 
-	$scope.projects      = Projects.all();
+	$scope.projects      = ProjectService.all();
 	$scope.showDeleteBtn = false;
-	$scope.activeProject = $scope.projects[Projects.getLastActiveIndex()];
+	$scope.activeProject = $scope.projects[ProjectService.getLastActiveIndex()];
 
 
 	// Called to create a new project with project title
 	var createProject = function(projectTitle) {
-		var newProject = Projects.newProject(projectTitle);
-    $scope.projects.push(newProject);
-    Projects.save($scope.projects);
-    $scope.selectProject(newProject, $scope.projects.length-1);
+		var newProject = ProjectService.newProject(projectTitle);
+	$scope.projects.push(newProject);
+	ProjectService.save($scope.projects);
+	$scope.selectProject(newProject, $scope.projects.length-1);
 	};
 
 	// Called to create a new project
 	$scope.newProject = function() {
 		var projectTitle = prompt('Project name');
 		if(projectTitle) {
-			var newProject = Projects.newProject(projectTitle);
+			var newProject = ProjectService.newProject(projectTitle);
 			$scope.projects.push(newProject);
-			Projects.save($scope.projects);
+			ProjectService.save($scope.projects);
 			$scope.selectProject(newProject, $scope.projects.length-1);
 		}
 	};
@@ -39,11 +39,11 @@ angular.module('starter.controllers', [])
 		console.log('delete project:' + project);
 		// Set active project to null
 		$scope.activeProject = $scope.projects[-1];
-		Projects.setLastActiveIndex(-1);
+		ProjectService.setLastActiveIndex(-1);
 		// Delete selected project
 		$scope.projects.splice($scope.projects.indexOf(project), 1);
 		// Save to local storage
-		Projects.save($scope.projects);
+		ProjectService.save($scope.projects);
 		// If all project list is empty, disable delete button
 		if ($scope.projects.length === 0) {
 			$scope.showDeleteBtn = false;
@@ -52,8 +52,8 @@ angular.module('starter.controllers', [])
 
 	// Called to select the given project
 	$scope.selectProject = function(project, index) {
-			$scope.activeProject = project;
-			Projects.setLastActiveIndex(index);
+		$scope.activeProject = project;
+		ProjectService.setLastActiveIndex(index);
 	};
 
 
@@ -61,10 +61,21 @@ angular.module('starter.controllers', [])
 
 	$scope.activeTask = null;
 
+	var getCurrentDate = function () {
+		var today = new Date();
+		var dd    = today.getDate();
+		var mm    = today.getMonth() + 1;  // January is 0!
+
+		dd = (dd < 10) ? '0' + dd : dd;
+		mm = (mm < 10) ? '0' + mm : mm;
+
+		return mm + '/' + dd;
+	};
+
 	// Called when task is complete
 	$scope.completionChanged = function(task) {
 		task.isComplete = ! task.isComplete;
-		Projects.save($scope.projects);
+		ProjectService.save($scope.projects);
 	};
 
 	$scope.createTask = function(task) {
@@ -79,10 +90,17 @@ angular.module('starter.controllers', [])
 			tags    : task.tags
 		});
 
+		$scope.history.push({
+			date    : getCurrentDate(),
+			project : $scope.activeProject.title,
+			type    : 0
+		});
+
 		$scope.NewTaskModal.hide();
 
 		// Inefficient, but save all the projects
-		Projects.save($scope.projects);
+		ProjectService.save($scope.projects);
+		ProjectService.saveHistory($scope.history);
 
 		task.title    = "";
 		task.content  = "";
@@ -105,7 +123,7 @@ angular.module('starter.controllers', [])
 		$scope.EditTaskModal.hide();
 
 		// Inefficient, but save all the projects
-		Projects.save($scope.projects);
+		ProjectService.save($scope.projects);
 
 		task.title    = "";
 		task.content  = "";
@@ -149,7 +167,15 @@ angular.module('starter.controllers', [])
 			buttonClicked: function(index) {
 				if (index === 0) {
 					task.isComplete = !task.isComplete;
-					Projects.save($scope.projects);
+					if (task.isComplete) {
+						$scope.history.push({
+							date    : getCurrentDate(),
+							project : $scope.activeProject.title,
+							type    : 1
+						});
+					ProjectService.save($scope.projects);
+					ProjectService.saveHistory($scope.history);
+					}
 				} else if (index === 1) {
 					// Move task up 
 					var indexOfActiveProject = $scope.projects.indexOf($scope.activeProject);
@@ -157,7 +183,7 @@ angular.module('starter.controllers', [])
 					console.log('index of task:' + indexOfTask);
 					$scope.projects[indexOfActiveProject].tasks.splice(indexOfTask, 1);
 					$scope.projects[indexOfActiveProject].tasks.unshift(task);
-					Projects.save($scope.projects);
+					ProjectService.save($scope.projects);
 				} else if (index === 2) {
 					// Edit task
 					$scope.EditTaskModal.show();
@@ -178,7 +204,7 @@ angular.module('starter.controllers', [])
 				var indexOfTask = $scope.activeProject.tasks.indexOf(task);
 				console.log('index of task:' + indexOfTask);
 				$scope.projects[indexOfActiveProject].tasks.splice(indexOfTask, 1);
-				Projects.save($scope.projects);
+				ProjectService.save($scope.projects);
 				return true;
 			}
 		});
@@ -247,6 +273,19 @@ angular.module('starter.controllers', [])
 	});
 
 
+	////////////////////////   Right Menu   ////////////////////////
+
+	// Contact me
+	$scope.contactMe = function() {
+	$window.open('https://mail.google.com/mail/?view=cm&fs=1&to=jesusjzp@gmail.com', '_blank', 'location=yes');
+	};
+
+	// Export data
+
+	// Import data
+
+
+
 	// Try to create the first project, make sure to defer
 	// this by using $timeout so everything is initialized
 	// properly
@@ -266,6 +305,6 @@ angular.module('starter.controllers', [])
 
 .controller('AboutCtrl', function($scope, $window) {
 	$scope.back = function() {
-    window.history.back();
+	window.history.back();
   };
 });

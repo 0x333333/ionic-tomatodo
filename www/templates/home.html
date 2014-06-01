@@ -78,7 +78,7 @@
     <ion-side-menu side="right">
       <!-- Header -->
       <ion-header-bar class="bar-positive">
-        <button class="button button-icon" ng-click="toggleProjects()">
+        <button menu-close class="button button-icon">
           <i class="icon ion-ios7-arrow-left"></i>
         </button>
         <h1 class="title">Settings</h1>
@@ -109,13 +109,13 @@
             <i class="icon ion-ios7-calendar"></i>
             Calendar
           </a>
-          <a class="item item-icon-left">
+          <a class="item item-icon-left" href="#/charts">
             <i class="icon ion-ios7-pie"></i>
             Statistics
           </a>
         </div>
         <div class="list card">
-          <a class="item item-icon-left">
+          <a class="item item-icon-left" ng-click="contactMe()">
             <i class="icon ion-ios7-email"></i>
             Email me
           </a>

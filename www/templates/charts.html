@@ -1,0 +1,29 @@
+<ion-view animation="nav-title-slide-ios7">
+  <ion-tabs class="tabs-positive">
+
+    <ion-tab title="New">
+      <ion-header-bar class="bar-positive">
+        <div class="buttons">
+          <a class="button button-icon icon ion-ios7-arrow-back" ng-click="back()"></a>
+        </div>
+        <h1 class="title">New Tasks</h1>
+      </ion-header-bar>
+      <ion-content has-tabs="true">
+        <div id="chartContainer" style="max-width: 80%; height: 70%; margin-top: 10px; margin-left: auto; margin-right: auto;" ng-controller="NewCtrl"></div>
+      </ion-content>
+    </ion-tab>
+
+    <ion-tab title="Finished">
+      <ion-header-bar class="bar-positive">
+        <div class="buttons">
+          <a class="button button-icon icon ion-ios7-arrow-back" ng-click="back()"></a>
+        </div>
+        <h1 class="title">Finished Tasks</h1>
+      </ion-header-bar>
+      <ion-content has-tabs="true">
+        Here's finish chart.
+      </ion-content>
+    </ion-tab>
+
+  </ion-tabs>
+</ion-view>

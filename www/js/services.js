@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('Projects', function() {
+.factory('ProjectService', function() {
   return {
     all: function() {
       var projectString = window.localStorage.projects;
@@ -9,11 +9,24 @@ angular.module('starter.services', [])
       }
       return [];
     },
+
+    getHistory: function() {
+      var allHistory = window.localStorage.history;
+      if (allHistory) {
+        return angular.fromJson(allHistory);
+      }
+      return [];
+    },
+
     save: function(projects) {
-      console.log("Save!");
       console.log("Projects:" + angular.toJson(projects));
       window.localStorage.projects = angular.toJson(projects);
     },
+
+    saveHistory: function(history) {
+      window.localStorage.history = angular.toJson(history);
+    },
+    
     newProject: function(projectTitle) {
       // Add a new project
       return {
@@ -21,9 +34,11 @@ angular.module('starter.services', [])
         tasks: []
       };
     },
+    
     getLastActiveIndex: function() {
       return parseInt(window.localStorage.lastActiveProject) || 0;
     },
+    
     setLastActiveIndex: function(index) {
       window.localStorage.lastActiveProject = index;
     }

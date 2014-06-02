@@ -9,7 +9,20 @@
         <h1 class="title">New Tasks</h1>
       </ion-header-bar>
       <ion-content has-tabs="true">
-        <div id="chartContainer" style="max-width: 80%; height: 70%; margin-top: 10px; margin-left: auto; margin-right: auto;" ng-controller="NewCtrl"></div>
+        <div class="list card">
+          <div class="button-bar bar-light">
+            <a class="button">
+              <p style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{numTask}}</p>
+              <p style="margin: 0px 0px 0px 0px">Total task</p>
+            </a>
+            <a class="button">
+              <p style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{completed}}</p>
+              <p style="margin: 0px 0px 0px 0px">Comp</p>
+            </a>
+          </div>
+          <div class="item item-body" id="chartContainer" style="height: 300px" ng-controller="NewCtrl">
+          </div>
+        </div>
       </ion-content>
     </ion-tab>
 
@@ -21,7 +34,20 @@
         <h1 class="title">Finished Tasks</h1>
       </ion-header-bar>
       <ion-content has-tabs="true">
-        Here's finish chart.
+        <div class="list card">
+          <div class="button-bar bar-light">
+            <a class="button">
+              <p style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{numTask}}</p>
+              <p style="margin: 0px 0px 0px 0px">Total task</p>
+            </a>
+            <a class="button">
+              <p style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{completed}}</p>
+              <p style="margin: 0px 0px 0px 0px">Completed</p>
+            </a>
+          </div>
+          <div class="item item-body" id="chartContainer" style="height: 300px" ng-controller="NewCtrl">
+          </div>
+        </div>
       </ion-content>
     </ion-tab>
 

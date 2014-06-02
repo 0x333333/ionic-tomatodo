@@ -26,7 +26,8 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
 
   .state('charts', {
     url: '/charts',
-    templateUrl: 'templates/charts.html'
+    templateUrl: 'templates/charts.html',
+    controller: 'ChartsCtrl'
   });
 
 

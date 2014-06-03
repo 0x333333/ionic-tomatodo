@@ -122,10 +122,12 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 		// Get the index of selected task
 		var indexofSelectedTask = $scope.activeProject.tasks.indexOf($scope.activeTask);
 		// Set the new name to selected task
-		$scope.activeProject.tasks[indexofSelectedTask].title    = task.title;
-		$scope.activeProject.tasks[indexofSelectedTask].content  = task.content;
-		$scope.activeProject.tasks[indexofSelectedTask].deadline = task.deadline;
-		$scope.activeProject.tasks[indexofSelectedTask].tags     = task.tags;
+		if (task) {
+			if (task.title) $scope.activeProject.tasks[indexofSelectedTask].title    = task.title;
+			if (task.content) $scope.activeProject.tasks[indexofSelectedTask].content  = task.content;
+			if (task.deadline) $scope.activeProject.tasks[indexofSelectedTask].deadline = task.deadline;
+			if (task.tags) $scope.activeProject.tasks[indexofSelectedTask].tags     = task.tags;
+		}
 		// Close dialog
 		$scope.EditTaskModal.hide();
 

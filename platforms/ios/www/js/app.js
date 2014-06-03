@@ -22,10 +22,21 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
     url: '/about',
     templateUrl: 'templates/about.html',
     controller: 'AboutCtrl'
+  })
+
+  .state('charts', {
+    url: '/charts',
+    templateUrl: 'templates/charts.html',
+    controller: 'ChartsCtrl'
+  })
+
+  .state('themes', {
+    url: '/themes',
+    templateUrl: 'templates/themes.html',
+    controller: 'ThemesCtrl'
   });
 
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app');
 });
-

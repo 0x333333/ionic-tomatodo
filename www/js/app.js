@@ -28,6 +28,12 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
     url: '/charts',
     templateUrl: 'templates/charts.html',
     controller: 'ChartsCtrl'
+  })
+
+  .state('themes', {
+    url: '/themes',
+    templateUrl: 'templates/themes.html',
+    controller: 'ThemesCtrl'
   });
 
 

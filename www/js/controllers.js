@@ -1,12 +1,19 @@
-angular.module('starter.controllers', ['starter.controller_charts'])
+angular.module('starter.controllers', ['starter.controller_charts', 'starter.controller_themes'])
+
+.controller('Ctrl', function($scope, ProjectService) {
+	// Set global theme
+	$scope.data    = {
+		theme: ProjectService.getTheme()
+	};
+})
 
 .controller('AppCtrl', function($scope, $timeout, $ionicModal, $ionicActionSheet, $window, ProjectService) {
 
 	////////////////////////   Parameters   ////////////////////////
-
 	_scope         = $scope;
 	$scope.query   = '';
 	$scope.history = ProjectService.getHistory();
+
 
 	////////////////////////   Project   ////////////////////////
 

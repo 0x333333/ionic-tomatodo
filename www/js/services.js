@@ -41,6 +41,18 @@ angular.module('starter.services', [])
     
     setLastActiveIndex: function(index) {
       window.localStorage.lastActiveProject = index;
+    },
+
+    getTheme: function() {
+      if (window.localStorage.theme) {
+        return window.localStorage.theme;
+      } else {
+        return 'positive';
+      }
+    },
+
+    saveTheme: function(theme) {
+      window.localStorage.theme = theme;
     }
   };
 });

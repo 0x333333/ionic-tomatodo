@@ -62,7 +62,7 @@
           ng-click="selectProject(project, $index)" 
           ng-class="{active: activeProject == project}">
             <ion-delete-button class="ion-ios7-minus" ng-click="deleteProject(project)"></ion-delete-button>
-            <i class="icon ion-ios7-bookmarks-outline"></i>
+            <i ng-class="'icon ion-ios7-bookmarks-outline '+data.theme"></i>
             {{project.title}}
             <span ng-class="'badge badge-'+data.theme">{{project.tasks.length}}</span>
             <!-- <i class="icon ion-ios7-arrow-right"></i> -->
@@ -87,40 +87,26 @@
       <!-- Content of Projects -->
       <ion-content has-header="true">
         <div class="list card">
-          <a class="item item-icon-left">
-            <i class="icon ion-ios7-upload"></i>
-            Export Data
-          </a>
-          <a class="item item-icon-left">
-            <i class="icon ion-ios7-download"></i>
-            Import Data
-          </a>
-        </div>
-        <div class="list card">
-          <a class="item item-icon-left">
-            <i class="icon ion-ios7-gear"></i>
-            Setting
-          </a>
           <a class="item item-icon-left" href="#/themes">
-            <i class="icon ion-ios7-heart"></i>
+            <i ng-class="'icon ion-ios7-heart-outline '+data.theme"></i>
             Themes
           </a>
-          <a class="item item-icon-left">
-            <i class="icon ion-ios7-calendar"></i>
-            Calendar
-          </a>
           <a class="item item-icon-left" href="#/charts">
-            <i class="icon ion-ios7-pie"></i>
+            <i ng-class="'icon ion-ios7-pie-outline '+data.theme"></i>
             Statistics
           </a>
         </div>
         <div class="list card">
+          <a class="item item-icon-left">
+            <i ng-class="'icon ion-social-dropbox-outline '+data.theme"></i>
+            Backup Data
+          </a>
           <a class="item item-icon-left" ng-click="contactMe()">
-            <i class="icon ion-ios7-email"></i>
+            <i ng-class="'icon ion-ios7-email-outline '+data.theme"></i>
             Email me
           </a>
           <a class="item item-icon-left" href="#/about">
-            <i class="icon ion-ios7-person"></i>
+            <i ng-class="'icon ion-ios7-person-outline '+data.theme"></i>
             About
           </a>
         </div>

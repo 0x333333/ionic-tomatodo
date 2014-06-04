@@ -15,6 +15,7 @@ angular.module('starter.controller_charts', [])
 
 	$scope.history  = ProjectService.getHistory();
 	$scope.projects = ProjectService.all();
+	$scope.numProj  = $scope.projects.length;
 	$scope.numTask  = 0;
 	$scope.completed= 0;
 
@@ -49,16 +50,16 @@ angular.module('starter.controller_charts', [])
 				hoverStyle: {
 					color: "#ffd700" 
 				},
-				label: {
-            visible: true,
-            connector: {
-                visible: true,
-                width: 1
-            },
-            customizeText: function(arg) {
-                return arg.valueText + " ( " + arg.percentText + ")";
-            }
-        }
+				// label: {
+    //       visible: true,
+    //       connector: {
+    //         visible: true,
+    //         width: 1
+    //       },
+    //       customizeText: function(arg) {
+    //         return arg.valueText + " tasks (" + arg.percentText + ")";
+    //       }
+    //     }
 			}]
 	});
 

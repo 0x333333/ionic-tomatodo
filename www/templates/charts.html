@@ -10,16 +10,20 @@
     <div class="list card">
       <div class="button-bar bar-light">
         <a class="button">
+          <p ng-class="dataTheme.theme" style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{numProj}}</p>
+          <p style="margin: 0px 0px 0px 0px;font-size: 14px;">Projects</p>
+        </a>
+        <a class="button">
           <p ng-class="dataTheme.theme" style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{numTask}}</p>
-          <p style="margin: 0px 0px 0px 0px">Total task</p>
+          <p style="margin: 0px 0px 0px 0px;font-size: 14px;">Tasks</p>
         </a>
         <a class="button">
           <p ng-class="dataTheme.theme" style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{completed}}</p>
-          <p style="margin: 0px 0px 0px 0px">Completed</p>
+          <p style="margin: 0px 0px 0px 0px;font-size: 14px;">Completed</p>
         </a>
       </div>
-      <div class="item item-body" id="chartContainer1" style="height: 250px"></div>
-      <div class="item item-body" id="chartContainer2" style="height: 250px"></div>
+      <div class="item item-body" id="chartContainer1" style="height: 200px"></div>
+      <div class="item item-body" id="chartContainer2" style="height: 200px"></div>
     </div>
   </ion-content>
   

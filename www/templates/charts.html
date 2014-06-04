@@ -1,6 +1,6 @@
 <ion-view animation="nav-title-slide-ios7">
   
-  <ion-header-bar ng-class="'bar-'+data2.theme">
+  <ion-header-bar ng-class="'bar-'+dataTheme.theme">
     <div class="buttons">
       <a class="button button-icon icon ion-ios7-arrow-back" ng-click="back()"></a>
     </div>
@@ -10,16 +10,16 @@
     <div class="list card">
       <div class="button-bar bar-light">
         <a class="button">
-          <p style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{numTask}}</p>
+          <p ng-class="dataTheme.theme" style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{numTask}}</p>
           <p style="margin: 0px 0px 0px 0px">Total task</p>
         </a>
         <a class="button">
-          <p style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{completed}}</p>
+          <p ng-class="dataTheme.theme" style="font-size: 45px;margin-top: 10px;margin-bottom: 0px;">{{completed}}</p>
           <p style="margin: 0px 0px 0px 0px">Completed</p>
         </a>
       </div>
-      <div class="item item-body" id="chartContainer" style="height: 300px">
-      </div>
+      <div class="item item-body" id="chartContainer1" style="height: 250px"></div>
+      <div class="item item-body" id="chartContainer2" style="height: 250px"></div>
     </div>
   </ion-content>
   

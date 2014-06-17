@@ -247,7 +247,7 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 				if (index === 0) {
 					// Move task up 
 					console.log('Facebook');
-					window.open('http://www.facebook.com/sharer.php?s=100&p[title]=TODO' + '&p[summary]=I\'m working on' + task.title + '&p[url]=http://todo.zhipengjiang.com', 'location=no,toolbar=0');
+					window.open('http://www.facebook.com/sharer.php?s=100&p[title]=TODO' + '&p[summary]=I\'m working on' + task.title + '&p[url]=http://jtodo.zhipengjiang.com', 'location=no,toolbar=0');
 				} else if (index === 1) {
 					// Edit task
 					window.open('https://twitter.com/intent/tweet?text=I\'m working on '+task.title+' with&hashtags=TODO', '_blank', 'location=no,toolbar=yes');

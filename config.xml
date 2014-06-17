@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>StarterApp</name>
+<widget id="com.zhipeng.jtodo" version="0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>JToDo</name>
     <description>
         Hybrid TODO app, built on ionic framework.
     </description>
@@ -10,8 +10,8 @@
     <content src="index.html" />
     <access origin="*" />
     <preference name="fullscreen" value="false" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
+    <preference name="webviewbounce" value="true" />
+    <preference name="UIWebViewBounce" value="true" />
     <preference name="DisallowOverscroll" value="true" />
     <feature name="InAppBrowser">
         <param name="ios-package" value="CDVInAppBrowser" />

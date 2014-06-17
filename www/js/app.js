@@ -18,12 +18,6 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
     controller: 'AppCtrl'
   })
 
-  .state('about', {
-    url: '/about',
-    templateUrl: 'templates/about.html',
-    controller: 'AboutCtrl'
-  })
-
   .state('charts', {
     url: '/charts',
     templateUrl: 'templates/charts.html',

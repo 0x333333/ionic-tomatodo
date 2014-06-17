@@ -97,17 +97,9 @@
           </a>
         </div>
         <div class="list card">
-          <a class="item item-icon-left">
-            <i ng-class="'icon ion-social-dropbox-outline '+data.theme"></i>
-            Backup Data
-          </a>
           <a class="item item-icon-left" ng-click="contactMe()">
             <i ng-class="'icon ion-ios7-email-outline '+data.theme"></i>
             Email me
-          </a>
-          <a class="item item-icon-left" href="#/about">
-            <i ng-class="'icon ion-ios7-person-outline '+data.theme"></i>
-            About
           </a>
         </div>
       </ion-content>
@@ -143,10 +135,6 @@
               <span class="input-label">Date</span>
               <input type="date" ng-model="task.deadline">
             </label>
-            <label class="item item-input">
-              <span class="input-label">Tags</span>
-              <input type="text" placeholder="Separate with comma" ng-model="task.tags">
-            </label>
           </div>
           
           <div class="padding">
@@ -180,10 +168,6 @@
             <label class="item item-input">
               <span class="input-label">Date</span>
               <input type="date" ng-model="task.deadline">
-            </label>
-            <label class="item item-input">
-              <span class="input-label">Tags</span>
-              <input type="text" placeholder="{{oldTask.tags}}" ng-model="task.tags">
             </label>
           </div>
           <div class="padding">

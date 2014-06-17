@@ -94,7 +94,6 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 			title   : task.title,
 			content : task.content,
 			deadline: task.deadline,
-			tags    : task.tags
 		});
 
 		$scope.history.push({
@@ -112,7 +111,6 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 		task.title    = "";
 		task.content  = "";
 		task.deadline = "";
-		task.tags     = "";
 	};
 
 	$scope.modifyTask = function(task) {
@@ -126,7 +124,6 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 			if (task.title) $scope.activeProject.tasks[indexofSelectedTask].title    = task.title;
 			if (task.content) $scope.activeProject.tasks[indexofSelectedTask].content  = task.content;
 			if (task.deadline) $scope.activeProject.tasks[indexofSelectedTask].deadline = task.deadline;
-			if (task.tags) $scope.activeProject.tasks[indexofSelectedTask].tags     = task.tags;
 		}
 		// Close dialog
 		$scope.EditTaskModal.hide();
@@ -137,7 +134,6 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 		task.title    = "";
 		task.content  = "";
 		task.deadline = "";
-		task.tags     = "";
 	};
 
 	// Called when task is clicked
@@ -314,6 +310,6 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 
 .controller('AboutCtrl', function($scope, $window) {
 	$scope.back = function() {
-	window.history.back();
+		window.history.back();
   };
 });

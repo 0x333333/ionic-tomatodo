@@ -13,7 +13,4 @@
     <preference name="webviewbounce" value="true" />
     <preference name="UIWebViewBounce" value="true" />
     <preference name="DisallowOverscroll" value="true" />
-    <feature name="InAppBrowser">
-        <param name="ios-package" value="CDVInAppBrowser" />
-    </feature>
 </widget>

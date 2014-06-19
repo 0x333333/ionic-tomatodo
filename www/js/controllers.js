@@ -282,7 +282,12 @@ angular.module('starter.controllers', ['starter.controller_charts', 'starter.con
 
 	// Contact me
 	$scope.contactMe = function() {
-	$window.open('https://mail.google.com/mail/?view=cm&fs=1&to=jesusjzp@gmail.com', '_blank', 'location=yes');
+		$window.open('https://mail.google.com/mail/?view=cm&fs=1&to=jesusjzp@gmail.com', '_blank', 'location=yes');
+	};
+
+	// Contact me
+	$scope.aboutMe = function() {
+		var ref = window.open('http://www.zhipengjiang.com', '_blank', 'location=yes');
 	};
 
 	// Export data

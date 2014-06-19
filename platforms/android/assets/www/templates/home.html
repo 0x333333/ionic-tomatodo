@@ -1,0 +1,184 @@
+<ion-view title="TODO">
+  <ion-side-menus>
+
+    <!-- Center content -->
+    <ion-side-menu-content drag-content="true">
+      
+      <!-- Header -->
+      <ion-header-bar ng-class="'bar-'+data.theme">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        <h1 class="title">{{activeProject.title}}</h1>
+        <button class="button button-clear" ng-click="NewTaskModal.show()">New</button>
+      </ion-header-bar>
+
+      <!-- Search bar -->
+      <div class="bar bar-subheader item item-input-inset">
+        <label class="item-input-wrapper">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="text" placeholder="Search task" ng-model="query" autocorrect="off">
+        </label>
+      </div>
+      
+      <!-- Result list -->
+      <ion-content class="has-subheader">
+        <ion-list class="fade-in-not-out">
+          <ion-item
+          class="item item-icon-left item-icon-right"
+          type="item-text-wrap"
+          ng-repeat="task in activeProject.tasks | filter:query" 
+          ng-model="task.isComplete" 
+          ng-class="{complete: task.isComplete}" 
+          ng-click="taskClick(task)">
+            <i ng-class="'icon ion-ios7-checkmark '+data.theme" ng-show="task.isComplete"></i>
+            <i ng-class="'icon ion-ios7-circle-outline '+data.theme" ng-show="!task.isComplete"></i>
+            {{task.title}}
+            <span class="item-note">
+              {{task.deadline}}
+            </span>          
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-side-menu-content>
+
+
+    <!-- Left menu -->
+    <ion-side-menu side="left">
+      <ion-header-bar ng-class="'bar-'+data.theme">
+        <button class="button button-icon" ng-click="showDeleteBtn = !showDeleteBtn">
+          <i class="icon ion-ios7-minus-empty"></i>
+        </button>
+        <h1 class="title">Projects</h1>
+        <button class="button button-icon" ng-click="newProject()">
+          <i class="icon ion-ios7-plus-empty"></i>
+        </button>
+      </ion-header-bar>
+
+      <!-- Content of Projects -->
+      <ion-content has-header="true">
+        <ion-list show-delete="showDeleteBtn">
+          <ion-item menu-close
+          class="item item-icon-left item-icon-right" 
+          ng-repeat="project in projects" 
+          ng-click="selectProject(project, $index)" 
+          ng-class="{active: activeProject == project}">
+            <ion-delete-button class="ion-ios7-minus" ng-click="deleteProject(project)"></ion-delete-button>
+            <i ng-class="'icon ion-ios7-bookmarks-outline '+data.theme"></i>
+            {{project.title}}
+            <span ng-class="'badge badge-'+data.theme">{{project.tasks.length}}</span>
+            <!-- <i class="icon ion-ios7-arrow-right"></i> -->
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-side-menu>
+
+
+
+
+    <!-- Right menu -->
+    <ion-side-menu side="right">
+      <!-- Header -->
+      <ion-header-bar ng-class="'bar-'+data.theme">
+        <button menu-close class="button button-icon">
+          <i class="icon ion-ios7-arrow-left"></i>
+        </button>
+        <h1 class="title">Settings</h1>
+      </ion-header-bar>
+
+      <!-- Content of Projects -->
+      <ion-content has-header="true">
+        <div class="list card">
+          <a class="item item-icon-left" href="#/themes">
+            <i ng-class="'icon ion-ios7-heart-outline '+data.theme"></i>
+            Themes
+          </a>
+          <a class="item item-icon-left" href="#/charts">
+            <i ng-class="'icon ion-ios7-pie-outline '+data.theme"></i>
+            Statistics
+          </a>
+        </div>
+        <!-- <div class="list card">
+          <a class="item item-icon-left" ng-click="contactMe()">
+            <i ng-class="'icon ion-ios7-email-outline '+data.theme"></i>
+            Email me
+          </a>
+          <a class="item item-icon-left" ng-click="aboutMe()">
+            <i ng-class="'icon ion-ios7-person-outline '+data.theme"></i>
+            About
+          </a>
+        </div> -->
+      </ion-content>
+    </ion-side-menu>
+
+  </ion-side-menus>
+
+
+
+
+
+
+  <!-- New task modal -->
+
+  <script id="new-task.html" type="text/ng-template">
+    <div class="modal">
+      <ion-header-bar ng-class="'bar-'+data.theme">
+        <h1 class="title">New Task</h1>
+        <button class="button button-clear" ng-click="NewTaskModal.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content has-header="true">
+        <form ng-submit="createTask(task)">
+          <div class="list list-inset">
+            <label class="item item-input">
+              <span class="input-label">Title</span>
+              <input type="text" placeholder="Title of task" ng-model="task.title">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Content</span>
+              <input type="text" placeholder="What do you need to do" ng-model="task.content">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Date</span>
+              <input type="date" ng-model="task.deadline">
+            </label>
+          </div>
+          
+          <div class="padding">
+            <button type="submit" ng-class="'button button-block button-outline button-'+data.theme">Create Task</button>
+          </div>
+
+        </form>
+      </ion-content>
+    </div>
+  </script>
+
+  <!-- Edit task modal -->
+
+  <script id="edit-task.html" type="text/ng-template">
+    <div class="modal">
+      <ion-header-bar ng-class="'bar-'+data.theme">
+        <h1 class="title">Modify Task</h1>
+        <button class="button button-clear" ng-click="EditTaskModal.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content has-header="true">
+        <form ng-submit="modifyTask(task)">
+          <div class="list list-inset">
+            <label class="item item-input">
+              <span class="input-label">Title</span>
+              <input type="text" placeholder="{{oldTask.title}}" ng-model="task.title">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Content</span>
+              <input type="text" placeholder="{{oldTask.content}}" ng-model="task.content">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Date</span>
+              <input type="date" ng-model="task.deadline">
+            </label>
+          </div>
+          <div class="padding">
+            <button type="submit" ng-class="'button button-block button-outline button-'+data.theme">Modify Task</button>
+          </div>
+        </form>
+      </ion-content>
+    </div>
+  </script>
+</ion-view>

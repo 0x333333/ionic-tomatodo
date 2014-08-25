@@ -1,2 +1,2 @@
-.gitignore
-platforms/*
+node_modules/
+bin/

@@ -1,3 +1,3 @@
 # view AndroidManifest.xml #generated:6
--keep class com.zhipeng.jtodo.JToDo { <init>(...); }
+-keep class com.zhipeng.jtodo.ionictomatodo { <init>(...); }
 
